@@ -2,39 +2,43 @@
 
 ```mermaid
 ---
-title: "毎日TODO ER図"
+title: "SpicyMap ER図"
 ---
 erDiagram
-repeat_type {
+
+shop_info {
     increments id PK "主キー"
-    string repeat_type_name "毎日・毎週・隔週・3週間おき・毎月"
+    string shop "店名"
+    integer average_spicy "平均辛さ"
+    string category "カテゴリー" 
+    integer latitude "緯度"
+    integer longitude "経度"
 }
 
-category_type {
-    increments id PK "主キー"
-    string category_type_name "その他・投薬・買い物・ゴミ捨て・会議"
+menu_info {
+    increments id PK "id 主キー"
+    integer shop_id FK "お店id"
+    string menu "メニュー名"
+    integer spicy_judge "辛さ評価"
 }
 
-todo_type {
+
+comment_info {
     increments id PK "主キー"
-    string title "TODOのタイトル"
-    integer repeat_type_id FK "毎日・毎週・隔週・3週間おき・毎月"
-    integer category_type_id FK "その他・投薬・買い物・ゴミ捨て・会議"
-    boolean use_type "時刻も使うか"
-    date date_start "TODOの開始日時"
-    integer target_weekday "TODOの対象曜日"
-    integer target_day "TODOの対象日（毎月のみ）"
-    date target_time "TODOの時刻"
+    integer shop_id FK "お店id"
+    integer menu_id FK "メニューID"
+    integer user_id FK "投稿者ID"
+    integer spicy_judge "辛さ評価"
+    TimeStamp post_datetime "投稿日時" 
+    string post_contents "投稿内容"
 }
 
-todo_list {
-    increments id PK "主キー"
-    integer todo_type_id FK
-    date todo_date
-    boolean check_done
+user_info {
+    increments id PK "id 主キー"
+    string user_name "ユーザ名"
 }
 
-todo_type ||--o{ repeat_type : "1つのtodo_typeは、0以上のrepeat_typeを持つ"
-todo_type ||--o{ category_type : "1つのtodo_typeは、0以上のtodo_listを持つ"
-todo_type ||--o{ todo_list : "1つのtodo_typeは、0以上のtodo_listを持つ"
+shop_info ||--o{ menu_info : "1つのshop_infoは、0以上のmenu_infoを持つ"
+menu_info ||--o{ comment_info : "1つのmenu_infoは、0以上のcomment_infoを持つ"
+user_info ||--o{ comment_info : "1つのuser_infoは、0以上のcomment_infoを持つ"
 ```
