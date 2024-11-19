@@ -11,8 +11,8 @@ erDiagram
 shop_info {
     increments id PK "主キー"
     string shop "店名"
-    integer average_spicy "平均辛さ"
-    string category "カテゴリー" 
+    decimal(32,2) average_spicy "平均辛さ"
+    integer category_id FK "カテゴリーID" 
     integer latitude "緯度"
     integer longitude "経度"
 }
@@ -40,7 +40,13 @@ user_info {
     string user_name "ユーザ名"
 }
 
+category_info {
+    increments id PK "id 主キー"
+    string category "カテゴリー"
+}
+
 shop_info ||--o{ menu_info : "1つのshop_infoは、0以上のmenu_infoを持つ"
 menu_info ||--o{ comment_info : "1つのmenu_infoは、0以上のcomment_infoを持つ"
 user_info ||--o{ comment_info : "1つのuser_infoは、0以上のcomment_infoを持つ"
+category_info ||--o{ shop_info : "1つのcategory_infoは、0以上のshop_infoを持つ"
 ```
