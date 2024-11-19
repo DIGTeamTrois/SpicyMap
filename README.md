@@ -29,7 +29,7 @@ comment_info {
     integer menu_id FK "メニューID"
     integer user_id FK "投稿者ID"
     integer spicy_judge "辛さ評価"
-    TimeStamp post_datetime "投稿日時" 
+    timestamp post_datetime "投稿日時" 
     string post_contents "投稿内容"
 }
 
