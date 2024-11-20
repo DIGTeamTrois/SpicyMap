@@ -43,6 +43,7 @@ export default function IndexView() {
     return {lat: value.latitude, lng: value.longitude}
   })
 
+
     return (
         <div className='flex flex-row w-1/2 justify-center'>
           <Wrapper apiKey='AIzaSyAvSUDOsyJyk9Hotfx0PMVdyKnzSgngHKQ' render={render}>
