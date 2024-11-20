@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install && npm run migrate-latest && npm run seed-data",
     "dev": "nodemon ./src/index.js",
+    "start": "node ./src/index.js",
     "migrate-latest": "knex migrate:latest",
     "migrate-down": "knex migrate:rollback",
     "makeMigration": "knex migrate:make",
