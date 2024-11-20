@@ -13,7 +13,7 @@ function setupServer() {
   app.use("/", express.static("../frontend/dist/"));
   app.get('/shops', shopController.all);
   app.get('/menus', menuController.all);
-  app.get('/shops', commentController.all);
+  app.get('/comments', commentController.all);
   app.get('/categorys', categoryController.all);
   return app;
 }
