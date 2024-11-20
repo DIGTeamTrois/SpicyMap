@@ -1,6 +1,8 @@
 # SpicyMap
 
 ちょっとだけ改変
+すみません、Discordだけダメで、スクリプト実行でマイグレートファイル作成等お願いします！
+npm run makeMigration create_table_各テーブル名
 
 ```mermaid
 ---
@@ -13,8 +15,8 @@ shop_info {
     string shop "店名"
     decimal(32,2) average_spicy "平均辛さ"
     integer category_id FK "カテゴリーID" 
-    integer latitude "緯度"
-    integer longitude "経度"
+    decimal(7,4)  latitude "緯度"
+    decimal(7,4) longitude "経度"
 }
 
 menu_info {
@@ -38,6 +40,8 @@ comment_info {
 user_info {
     increments id PK "id 主キー"
     string user_name "ユーザ名"
+    string login_name "ログイン名"
+    string password "password"
 }
 
 category_info {
