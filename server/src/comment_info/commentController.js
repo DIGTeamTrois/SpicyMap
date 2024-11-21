@@ -3,7 +3,8 @@ const commentModel=require("./commentModel")
 module.exports= {
     async all(req, res) {
         try{
-            const commentData = await commentModel.all();
+            const limit = req.query.limit
+            const commentData = await commentModel.all(limit);
             if (commentData) {
                 res.status(200).json(commentData)
             } else {
