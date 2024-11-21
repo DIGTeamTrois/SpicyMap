@@ -41,7 +41,7 @@ describe("/shops ", () => {
     it("GET /shops/:id  shops should return 1 array ", async () => {
         const response = await shopModel.find(1);
         // console.log("🍎🍎🍎🍎data 指定1件", response)
-        expect(response).to.be.an.instanceOf(Array);
+        expect(response.length).to.equal(1);
     });
 
     it("POST /shops   should be able to create a new shop", async () => {
