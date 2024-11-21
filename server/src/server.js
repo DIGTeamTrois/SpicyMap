@@ -10,6 +10,7 @@ function setupServer() {
   app.use(cors());
 
   app.use(express.json());
+
   app.use("/", express.static("../frontend/dist/"));
   app.get('/shops', shopController.all);
   app.get('/shops/:id', shopController.view);
@@ -26,6 +27,7 @@ function setupServer() {
   app.get('/categories', categoryController.all);
   app.get('/categories/:id', categoryController.view);
   app.post('/categories', categoryController.save);
+
 
   return app;
 }
