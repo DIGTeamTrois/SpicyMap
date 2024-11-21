@@ -6,14 +6,13 @@ import {Map} from "./Map";
 import {Marker} from "./Marker.tsx";
 import {useAtom} from "jotai";
 
-import {selectShopAtom, shopsAtom} from "./atom.tsx";
+import {shopsAtom} from "./atom.tsx";
 import {ShopInfo} from "./ShopInfo.tsx";
 import {useEffect} from "react";
 
 export default function IndexView() {
 
   const [shops, setShops] = useAtom(shopsAtom)
-  const [selectShop] = useAtom(selectShopAtom)
 
   const position = {
     lat: 35.17100383703858,
@@ -23,7 +22,7 @@ export default function IndexView() {
   useEffect(() => {
     fetch("http://localhost:8080/shops")
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data => setShops(data))
   }, []);
 
     const markers:google.maps.LatLngLiteral[] = shops.map((shop) => {
@@ -41,7 +40,7 @@ export default function IndexView() {
                 return <Marker key={index} position={value} />
               })}
             </Map>
-            {selectShop.length > 0 && <ShopInfo />}
+            <ShopInfo />
           </div>
         </Wrapper>
       </div>
