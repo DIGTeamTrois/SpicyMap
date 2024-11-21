@@ -12,9 +12,21 @@ function setupServer() {
   app.use(express.json());
   app.use("/", express.static("../frontend/dist/"));
   app.get('/shops', shopController.all);
+  app.get('/shops/:id', shopController.view);
+  app.post('/shops', shopController.save);
+
   app.get('/menus', menuController.all);
+  app.get('/menus/:id', menuController.view);
+  app.post('/menus', menuController.save);
+
   app.get('/comments', commentController.all);
-  app.get('/categorys', categoryController.all);
+  app.get('/comments/:id', commentController.view);
+  app.post('/comments', commentController.save);
+
+  app.get('/categories', categoryController.all);
+  app.get('/categories/:id', categoryController.view);
+  app.post('/categories', categoryController.save);
+
   return app;
 }
 
