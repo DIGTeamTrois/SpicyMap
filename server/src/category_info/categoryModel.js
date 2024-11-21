@@ -8,7 +8,14 @@ const CATEGORY_TABLE="category_info"
 
 module.exports={
     CATEGORY_TABLE,
-    async all() {
-        return await db(CATEGORY_TABLE)
+    async all(limit) {
+        return await db(CATEGORY_TABLE).limit(limit)
+    },
+    async find(id) {
+        return await db(CATEGORY_TABLE).where({id})
+    },
+    async save(data){
+        await db.table(CATEGORY_TABLE).insert(data)
+        return this.find(data.id)
     }
 }

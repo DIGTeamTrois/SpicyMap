@@ -3,7 +3,8 @@ const menuModel = require("./menuModel")
 module.exports = {
     async all(req, res){
         try{
-                const menuData = await menuModel.all()
+            const limit = req.query.limit
+                const menuData = await menuModel.all(limit)
                 if(menuData){
                     res.status(200).json(menuData)
                 }else{
