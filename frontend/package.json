@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc -b && vite build",
+    "build": "npm i && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -13,6 +13,7 @@
     "@googlemaps/react-wrapper": "^1.1.42",
     "@react-google-maps/api": "^2.20.3",
     "@types/node": "^22.9.1",
+    "@yamada-ui/react": "^1.6.4",
     "dotenv": "^16.4.5",
     "jotai": "^2.10.2",
     "react": "^18.3.1",

@@ -4,11 +4,21 @@ import "./ShopInfo.css"
 
 export function ShopInfo() {
 
-const [selectShop] = useAtom(selectShopAtom)
+    const [selectShop] = useAtom(selectShopAtom)
+
+    let shopInfoView = <h1>お店を選択</h1>
+
+    if (selectShop.length > 0) {
+        shopInfoView =
+            <>
+                <h1> {selectShop[0].shop}</h1>
+                <p>辛さレベル🌶️ {selectShop[0].average_spicy}</p>
+            </>
+    }
 
     return (
         <div className={"info"}>
-            <h1>{selectShop[0].shop}</h1>
-            <p>辛さレベル🌶️ {selectShop[0].average_spicy}</p>
+            {shopInfoView}
         </div>
-    )}
+    )
+}
