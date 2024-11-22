@@ -4,8 +4,6 @@ import AppRoutes from "./AppRoutes.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { UIProvider } from "@yamada-ui/react"
 
-import "./index.css"
-
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
       <BrowserRouter>
