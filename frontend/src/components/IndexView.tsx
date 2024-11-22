@@ -1,5 +1,4 @@
 import {Status, Wrapper} from "@googlemaps/react-wrapper";
-import "./IndexView.css"
 
 import {Map} from "./Map";
 import {Marker} from "./Marker.tsx";

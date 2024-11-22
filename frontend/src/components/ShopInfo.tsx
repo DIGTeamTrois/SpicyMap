@@ -1,6 +1,5 @@
 import {useAtom} from "jotai";
 import {selectShopAtom} from "./atom.tsx";
-import "./ShopInfo.css"
 
 export function ShopInfo() {
 
