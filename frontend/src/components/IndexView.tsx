@@ -1,5 +1,4 @@
 import {Status, Wrapper} from "@googlemaps/react-wrapper";
-// import 'dotenv/config'
 import "./IndexView.css"
 
 import {Map} from "./Map";
@@ -19,8 +18,10 @@ export default function IndexView() {
     lng: 136.88064007022157
   } as google.maps.LatLngLiteral;
 
+  const API_URL = process.env.VITE_API_URL!;
+
   useEffect(() => {
-    fetch("http://localhost:8080/shops")
+    fetch(`${API_URL}/shops`)
         .then(res => res.json())
         .then(data => setShops(data))
   }, []);
@@ -29,11 +30,12 @@ export default function IndexView() {
       return {lat: shop.latitude, lng: shop.longitude}
     })
 
-  // console.log(process.env.REACT_APP_APIKEY)
+
+  const API_KEY: string = process.env.VITE_API_KEY!;
 
   return (
       <div className='flex flex-row w-1/2 justify-center'>
-        <Wrapper apiKey='AIzaSyAvSUDOsyJyk9Hotfx0PMVdyKnzSgngHKQ' render={render}>
+        <Wrapper apiKey={API_KEY} render={render}>
           <div className={"main_screen"}>
             <Map style={{ width: '100%', aspectRatio: '16 / 9' }} center={position}>
               {markers.map((value, index) => {
