@@ -1,19 +1,17 @@
 # SpicyMap
-！！！テーブル設定変更要！緯度経度　shop_infoテーブル
+
+## DB名
+spicy_map
 
 ```mermaid
----
-title: "SpicyMap ER図"
----
 erDiagram
-
 shop_info {
     increments id PK "主キー"
     string shop "店名"
-    decimal(32,2) average_spicy "平均辛さ"
+    decimal(32) average_spicy "平均辛さ"
     integer category_id FK "カテゴリーID" 
-    decimal(18, 15)  latitude "緯度"
-    decimal(18, 15) longitude "経度"
+    decimal(18)  latitude "緯度"
+    decimal(18) longitude "経度"
 }
 
 menu_info {
@@ -50,4 +48,30 @@ shop_info ||--o{ menu_info : "1つのshop_infoは、0以上のmenu_infoを持つ
 menu_info ||--o{ comment_info : "1つのmenu_infoは、0以上のcomment_infoを持つ"
 user_info ||--o{ comment_info : "1つのuser_infoは、0以上のcomment_infoを持つ"
 category_info ||--o{ shop_info : "1つのcategory_infoは、0以上のshop_infoを持つ"
+```
+
+# ローカル環境構築手順
+1. このリポジトリをクローン
+2. spicy_mapテーブルを構築
+3. frontendディレクトリ直下に.envファイルを作成
+4. backendディレクトリ直下に.envファイルを作成
+5. プロジェクトルートで npm run build
+
+## frontendディレクトリ直下の.envファイル
+```
+VITE_API_KEY=GoogleマップのAPIキーを取得してください
+VITE_API_URL=http://localhost:8080
+```
+
+## GoogleマップAPIのキーについて
+GoogleマップAPIのキーは、Google Cloud Platformで取得してください。
+https://qiita.com/Haruka-Ogawa/items/997401a2edcd20e61037
+
+## backendディレクトリ直下の.envファイル
+```
+DB_NAME=spicy_map
+DB_USER=user
+DB_PASSWORD=
+NODE_ENV=development
+PORT=8080
 ```
