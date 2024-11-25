@@ -32,8 +32,8 @@ module.exports = {
     async save(req, res) {
         try {
             const menuData = req.body;
-            const saveData = menuModel.save(menuData)
-            if (menuData.category === saveData.menu) {
+            const [saveData] = await menuModel.save(menuData)
+            if (menuData.menu === saveData.menu) {
                 res.status(200).json(saveData)
             } else {
                 res.status(400).json("Could not save menu's data.")
