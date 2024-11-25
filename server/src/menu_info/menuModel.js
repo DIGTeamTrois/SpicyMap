@@ -5,6 +5,18 @@ const config = require("../../knexfile")[environment];
 const db = require("knex")(config)
 
 const MENU_TABLE = "menu_info"
+const SHOP_TABlE = "shop_info"
+
+const updateSpicyAverage = async (shop_id) => {
+    let spicyAvg = await spicyAvgCal(shop_id)
+    await db(SHOP_TABlE).update("average_spicy", spicyAvg).where("id",shop_id)
+}
+
+const spicyAvgCal = async (shop_id) => {
+    const spicyOfShopArr = await db(MENU_TABLE).where({shop_id})
+    const shopSpicyAvg = spicyOfShopArr.reduce((sum, item)=>sum+item.spicy_judge,0)/spicyOfShopArr.length
+    return shopSpicyAvg
+}
 
 module.exports = {
     MENU_TABLE,
@@ -16,6 +28,7 @@ module.exports = {
     },
     async save(data){
         await db.table(MENU_TABLE).insert(data)
+        await updateSpicyAverage(data.shop_id)
         return this.find(data.id)
     }
 }
