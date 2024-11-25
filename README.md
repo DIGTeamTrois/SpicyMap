@@ -52,7 +52,7 @@ category_info ||--o{ shop_info : "1つのcategory_infoは、0以上のshop_info�
 
 # ローカル環境構築手順
 1. このリポジトリをクローン
-2. spicy_mapテーブルを構築
+2. データベースspicy_mapを構築
 3. frontendディレクトリ直下に.envファイルを作成
 4. backendディレクトリ直下に.envファイルを作成
 5. プロジェクトルートで npm run build
