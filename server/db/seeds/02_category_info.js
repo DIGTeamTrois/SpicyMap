@@ -11,5 +11,6 @@ exports.seed = async function (knex) {
     { id: 3, category: "カレー" },
     { id: 4, category: "中華料理" },
     { id: 5, category: "インド料理" },
+    { id: 6, category: "その他" },
   ]);
 };
