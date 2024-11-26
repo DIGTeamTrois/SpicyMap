@@ -1,24 +1,45 @@
-import {useAtom} from "jotai";
-import {selectShopAtom} from "./atom.tsx";
-import {Box, SimpleGrid, GridItem } from "@yamada-ui/react"
+// import {useAtom} from "jotai";
+// import {selectShopAtom} from "./atom.tsx";
+import {Text} from "@yamada-ui/react"
+// import {useEffect} from "react";
 
 export function ShopMenuView() {
-  const [selectShop] = useAtom(selectShopAtom)
+  //ここに選択されたショップのidが入っている？
+  // const [selectShop] = useAtom(selectShopAtom)
+
+  //動作確認用の配列
+  //本来であればuseEffectで取得する
   const shopMenuArr = [
     { id: 1, shop_id: 1, menu: "台湾ラーメン", spicy_judge: 5 },
     { id: 2, shop_id: 1, menu: "台湾混ぜそば", spicy_judge: 4 },
-    { id: 3, shop_id: 1, menu: "塩台湾ラーメン", spicy_judge: 3 }
+    { id: 3, shop_id: 1, menu: "塩台湾ラーメン", spicy_judge: 3 },
+    { id: 4, shop_id: 2, menu: "チゲスープ", spicy_judge: 3 },
+    { id: 5, shop_id: 2, menu: "チヂミ", spicy_judge: 1 },
   ]
+  const selectShopId = 1;
+
+  // interface ShopMenuInterface {
+  //   id: number;
+  //   shop_id: string;
+  //   menu: string;
+  //   spicy_judge: number;
+
+  // }
+  // useEffect(()=>{
+  //   const ashopMenuArr = async () => {
+  //     await fetch("/menus")
+  //       .then(async (shopMenuJson) => await shopMenuJson.json())
+  //       .then((shopMenu) => shopMenu.filter((shopMenuObj:ShopMenuInterface[])=>shopMenuObj.shop_id===selectShopId))
+  //   }
+  // })
+
   return(
     <>
-      <Box maxWidth="500px">
-        <SimpleGrid w="full" columns={{ base: 2, md: 1 }} gap="md">
-          <GridItem w="full" h="1xs" rounded="md" bg="gray.50" color="black" maxWidth="200px">メニュー</GridItem>
-          <GridItem w="full" h="1xs" rounded="md" bg="secondary"maxWidth="200px">辛さ</GridItem>
-          <GridItem w="full" h="1xs" rounded="md" bg="warning" />
-          <GridItem w="full" h="1xs" rounded="md" bg="danger" />
-        </SimpleGrid>
-      </Box>
+      {shopMenuArr
+        .filter((menuObj) => menuObj.shop_id===selectShopId)
+        .map((menuObj) =>
+          <Text >{menuObj.menu} : 辛さ{menuObj.spicy_judge}</Text>)
+      }
     </>
   )
 }
