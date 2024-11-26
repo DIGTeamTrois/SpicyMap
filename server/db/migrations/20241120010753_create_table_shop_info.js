@@ -5,7 +5,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable("shop_info", function (table) {
     table.increments("id").primary();
-    table.string("shop", 64).notNullable();
+    table.string("shop_name", 64).notNullable();
     table.decimal("average_spicy", 32, 2).notNullable();
     table.integer("category_id");
     table.decimal("latitude", 7, 4).notNullable();
