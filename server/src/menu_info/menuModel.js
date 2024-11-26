@@ -7,7 +7,7 @@ const db = require("knex")(config)
 const MENU_TABLE = "menu_info"
 const SHOP_TABlE = "shop_info"
 
-const updateSpicyAverage = async (shop_id) => {
+const updateShopSpicyAverage = async (shop_id) => {
     let spicyAvg = await spicyAvgCal(shop_id)
     await db(SHOP_TABlE).update("average_spicy", spicyAvg).where("id",shop_id)
 }
@@ -28,7 +28,7 @@ module.exports = {
     },
     async save(data){
         await db.table(MENU_TABLE).insert(data)
-        await updateSpicyAverage(data.shop_id)
+        await updateShopSpicyAverage(data.shop_id)
         return this.find(data.id)
     }
 }
