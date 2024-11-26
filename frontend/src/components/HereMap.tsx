@@ -1,40 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useAtom } from "jotai";
-import { originAtom, destinationAtom } from "./atom.tsx";
+import { useEffect, useRef, useState } from "react";
+// import { useAtom } from "jotai";
+// import { originAtom, destinationAtom } from "./atom.tsx";
 import H from "@here/maps-api-for-javascript";
-
-const spicyRestaurantList = [
-  {
-    name: "四川飯店 名古屋",
-    location: { lat: 35.1708, lng: 136.8847 }, // 名古屋駅の東側
-  },
-  {
-    name: "辛麺屋 桝元 名古屋駅前店",
-    location: { lat: 35.1712, lng: 136.8803 }, // 名古屋駅の西側
-  },
-  {
-    name: "蒙古タンメン中本 名古屋店",
-    location: { lat: 35.1699, lng: 136.8834 }, // 名古屋駅周辺
-  },
-  {
-    name: "赤から 名駅西口店",
-    location: { lat: 35.1697, lng: 136.8795 }, // 名古屋駅西口付近
-  },
-];
 
 export const HereMap = () => {
   const mapRef = useRef<HTMLDivElement | null>(null); // 地図を描画する要素の参照
-  const [platform, setPlatform] = useState<any>(null); // HEREプラットフォーム
-  const [map, setMap] = useState<any>(null); // 地図インスタンス
-  const [origin] = useAtom(originAtom); // 出発地点の緯度経度
-  const [destination] = useAtom(destinationAtom); // 到着地点の緯度経度
+  // const [platform, setPlatform] = useState<any>(null); // HEREプラットフォーム
+  const [map, setMap] = useState<H.Map>(); // 地図インスタンス
+  // const [origin] = useAtom(originAtom); // 出発地点の緯度経度
+  // const [destination] = useAtom(destinationAtom); // 到着地点の緯度経度
 
   useEffect(() => {
     // APIキーでプラットフォームインスタンスを作成
+
     const platformInstance = new H.service.Platform({
-      apikey: process.env.VITE_API_KEY,
+      apikey: process.env.VITE_API_KEY || "",
     });
-    setPlatform(platformInstance);
+    // setPlatform(platformInstance);
 
     // カスタムスタイル設定
     const baseUrl = "https://js.api.here.com/v3/3.1/styles/omv/oslo/japan/";
@@ -47,11 +29,11 @@ export const HereMap = () => {
     const omvProvider = new H.service.omv.Provider(omvService, customStyle);
     const customLayer = new H.map.layer.TileLayer(omvProvider, { max: 22 });
 
-    const mapInstance = new H.Map(mapRef.current!, customLayer);
-    // const mapInstance = new H.Map(mapRef.current!, customLayer, {
-    //   center: { lat: 35.1709, lng: 136.8815 }, // 名古屋駅
-    //   zoom: 17, // ズームレベル
-    // });
+    // const mapInstance = new H.Map(mapRef.current!, customLayer);
+    const mapInstance = new H.Map(mapRef.current!, customLayer, {
+      center: { lat: 35.1709, lng: 136.8815 }, // 名古屋駅
+      zoom: 17, // ズームレベル
+    });
     setMap(mapInstance);
 
     // ユーザー操作を有効化
@@ -66,45 +48,77 @@ export const HereMap = () => {
     };
   }, []);
 
+  interface ShopInterface {
+    id: number;
+    shop: string;
+    average_spicy: number;
+    category_id: number;
+    latitude: number;
+    longitude: number;
+  }
+
+  interface ShopLocationInterface {
+    name: string;
+    location: { lat: number; lng: number };
+  }
+
   useEffect(() => {
     if (!map) return;
 
-    spicyRestaurantList.forEach((restaurant) => {
-      const marker = new H.map.Marker(restaurant.location);
-      marker.setData(restaurant.name);
+    const fetchShops = async () => {
+      await fetch(`/shops`)
+        .then(async (shopsJson) => await shopsJson.json())
+        .then((shops) => {
+          const shopsLocation: ShopLocationInterface[] = shops.map(
+            (shopData: ShopInterface): ShopLocationInterface => {
+              return {
+                name: shopData.shop,
+                location: { lat: shopData.latitude, lng: shopData.longitude },
+              };
+            },
+          );
 
-      marker.addEventListener("click", () => {
-        alert(`${restaurant.name}が選択されています。`);
-      });
+          shopsLocation.forEach((shop) => {
+            const marker = new H.map.Marker(shop.location);
+            marker.setData(shop.name);
 
-      map.addObject(marker);
-    });
-    // 余白を追加する比率（10% 余白）
-    const paddingRatio = 0.1;
+            marker.addEventListener("click", () => {
+              alert(`${shop.name}が選択されています。`);
+            });
 
-    const latitudes = spicyRestaurantList.map((r) => r.location.lat);
-    const longitudes = spicyRestaurantList.map((r) => r.location.lng);
+            map.addObject(marker);
 
-    // 緯度と経度の範囲
-    const maxLat = Math.max(...latitudes);
-    const minLat = Math.min(...latitudes);
-    const maxLng = Math.max(...longitudes);
-    const minLng = Math.min(...longitudes);
+            // 余白を追加する比率（10% 余白）
+            const paddingRatio = 0.1;
 
-    // 余白の計算
-    const latPadding = (maxLat - minLat) * paddingRatio;
-    const lngPadding = (maxLng - minLng) * paddingRatio;
+            const latitudes = shopsLocation.map((r) => r.location.lat);
+            const longitudes = shopsLocation.map((r) => r.location.lng);
 
-    const boundingBox = new H.geo.Rect(
-      maxLat + latPadding, // 北端
-      minLng - lngPadding, // 西端
-      minLat - latPadding, // 南端
-      maxLng + lngPadding, // 東端
-    );
+            // 緯度と経度の範囲
+            const maxLat = Math.max(...latitudes);
+            const minLat = Math.min(...latitudes);
+            const maxLng = Math.max(...longitudes);
+            const minLng = Math.min(...longitudes);
 
-    // 余白を追加した範囲を地図のビューに設定
-    map.getViewModel().setLookAtData({ bounds: boundingBox });
-    map.getViewModel().setLookAtData({ bounds: boundingBox });
+            // 余白の計算
+            const latPadding = (maxLat - minLat) * paddingRatio;
+            const lngPadding = (maxLng - minLng) * paddingRatio;
+
+            const boundingBox = new H.geo.Rect(
+              maxLat + latPadding, // 北端
+              minLng - lngPadding, // 西端
+              minLat - latPadding, // 南端
+              maxLng + lngPadding, // 東端
+            );
+
+            // 余白を追加した範囲を地図のビューに設定
+            map.getViewModel().setLookAtData({ bounds: boundingBox });
+            map.getViewModel().setLookAtData({ bounds: boundingBox });
+          });
+        });
+    };
+
+    fetchShops();
   }, [map]);
 
   return (
