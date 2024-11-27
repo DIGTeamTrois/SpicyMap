@@ -1,7 +1,10 @@
 import {
-    Button, Container,
-    FormControl, Input, VStack
-} from '@yamada-ui/react'
+  Button,
+  Container,
+  FormControl,
+  Input,
+  VStack,
+} from "@yamada-ui/react";
 
 import { useForm } from "react-hook-form";
 import {useNavigate} from "react-router-dom";
