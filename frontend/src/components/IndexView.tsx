@@ -1,5 +1,5 @@
-import { HStack } from "@yamada-ui/react";
-import { HereMap } from "./HereMap.tsx";
+import { Box, HStack } from "@yamada-ui/react";
+import { HereMap } from "../mapFeatures/HereMap.tsx";
 import { ShopMenuView } from "./ShopMenuView.tsx";
 import { AddMenu } from "./AddMenu.tsx";
 
@@ -9,9 +9,11 @@ export default function IndexView() {
       <h1>HERE Map</h1>
       <HStack>
         <HereMap />
-        <ShopMenuView />
+        <Box>
+          <ShopMenuView />
+          <AddMenu />
+        </Box>
       </HStack>
-      <AddMenu />
     </>
   );
 }
