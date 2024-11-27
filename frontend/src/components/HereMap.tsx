@@ -1,6 +1,6 @@
 import H from "@here/maps-api-for-javascript";
 import { useEffect, useRef, useState } from "react";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { selectShopAtom } from "./atom.tsx";
 
 const API_URL = process.env.REACT_APP_API_URL || "/shops";
@@ -8,7 +8,7 @@ const API_URL = process.env.REACT_APP_API_URL || "/shops";
 export const HereMap = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<H.Map | null>(null);
-  const [selectShop, setSelectShop] = useAtom(selectShopAtom);
+  const setSelectShop = useSetAtom(selectShopAtom);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -138,7 +138,6 @@ export const HereMap = () => {
   return (
     <>
       <div ref={mapRef} style={{ width: "100%", height: "500px" }} />
-      <div>{JSON.stringify(selectShop)}</div>
     </>
   );
 };
