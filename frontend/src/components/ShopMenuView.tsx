@@ -1,39 +1,21 @@
 import { Box, Heading, HStack, Text } from "@yamada-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAtom } from "jotai";
-import { selectShopAtom } from "./atom.tsx";
+import { selectShopAtom, menusAtom } from "./atom.tsx";
+import { addShopMenu } from "./helpers/getShopMenu.ts";
 
 export function ShopMenuView() {
   const [selectShop] = useAtom(selectShopAtom);
-  const [shopMenuArr, setShopMenuArr] = useState<ShopMenuInterface[]>([]);
-
-  interface ShopMenuInterface {
-    id: number;
-    shop_id: number;
-    menu: string;
-    spicy_judge: number;
-  }
+  // const [shopMenuArr, setShopMenuArr] = useState<ShopMenuInterface[]>([]);
+  const [menus, setMenus] = useAtom(menusAtom);
 
   useEffect(() => {
-    const getShopMenu = async () => {
-      if (!selectShop) return;
-
-      const responce = await fetch("/menus");
-      const shopMenu = await responce.json();
-
-      const filteredMenu = shopMenu.filter(
-        (shopMenuObj: ShopMenuInterface) =>
-          shopMenuObj.shop_id === selectShop?.id,
-      );
-      setShopMenuArr(filteredMenu);
-    };
+    addShopMenu(selectShop, setMenus);
     console.log("selectShop変更されました");
-
-    getShopMenu();
-  }, [selectShop]);
+  }, [selectShop, setMenus]);
 
   if (!selectShop) {
-    return <Text>お店が選択されていません。</Text>;
+    return <Text size="sm">お店が選択されていません。</Text>;
   }
 
   return (
@@ -49,7 +31,7 @@ export function ShopMenuView() {
       <Heading as="h2" size="sm" textAlign="center" mb={6}>
         {selectShop.shop_name} メニュー表
       </Heading>
-      {shopMenuArr.map((menuObj, index) => (
+      {menus.map((menuObj, index) => (
         <HStack
           alignItems="center"
           justifyContent="space-between"
