@@ -1,24 +1,22 @@
-import { useEffect, useRef, useState } from "react";
-// import { useAtom } from "jotai";
-// import { originAtom, destinationAtom } from "./atom.tsx";
 import H from "@here/maps-api-for-javascript";
+import { useEffect, useRef, useState } from "react";
+import { useAtom } from "jotai";
+import { selectShopAtom } from "./atom.tsx";
+
+const API_URL = process.env.REACT_APP_API_URL || "/shops";
 
 export const HereMap = () => {
-  const mapRef = useRef<HTMLDivElement | null>(null); // 地図を描画する要素の参照
-  // const [platform, setPlatform] = useState<any>(null); // HEREプラットフォーム
-  const [map, setMap] = useState<H.Map>(); // 地図インスタンス
-  // const [origin] = useAtom(originAtom); // 出発地点の緯度経度
-  // const [destination] = useAtom(destinationAtom); // 到着地点の緯度経度
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<H.Map | null>(null);
+  const [selectShop, setSelectShop] = useAtom(selectShopAtom);
 
   useEffect(() => {
-    // APIキーでプラットフォームインスタンスを作成
+    if (!mapRef.current) return;
 
     const platformInstance = new H.service.Platform({
-      apikey: process.env.VITE_API_KEY || "",
+      apikey: process.env.VITE_API_KEY || "default-api-key",
     });
-    // setPlatform(platformInstance);
 
-    // カスタムスタイル設定
     const baseUrl = "https://js.api.here.com/v3/3.1/styles/omv/oslo/japan/";
     const customStyle = new H.map.Style(`${baseUrl}normal.day.yaml`, baseUrl);
 
@@ -29,20 +27,18 @@ export const HereMap = () => {
     const omvProvider = new H.service.omv.Provider(omvService, customStyle);
     const customLayer = new H.map.layer.TileLayer(omvProvider, { max: 22 });
 
-    // const mapInstance = new H.Map(mapRef.current!, customLayer);
-    const mapInstance = new H.Map(mapRef.current!, customLayer, {
-      center: { lat: 35.1709, lng: 136.8815 }, // 名古屋駅
-      zoom: 17, // ズームレベル
+    const mapInstance = new H.Map(mapRef.current, customLayer, {
+      center: { lat: 35.1709, lng: 136.8815 },
+      zoom: 17,
     });
+
     setMap(mapInstance);
 
-    // ユーザー操作を有効化
     new H.mapevents.Behavior(new H.mapevents.MapEvents(mapInstance));
-
-    // UI（ズームボタンなど）を追加
     H.ui.UI.createDefault(mapInstance, customLayer);
 
-    // コンポーネントがアンマウントされるときに地図を破棄
+    window.addEventListener("resize", () => mapInstance.getViewPort().resize());
+
     return () => {
       mapInstance.dispose();
     };
@@ -50,7 +46,7 @@ export const HereMap = () => {
 
   interface ShopInterface {
     id: number;
-    shop: string;
+    shop_name: string;
     average_spicy: number;
     category_id: number;
     latitude: number;
@@ -58,7 +54,10 @@ export const HereMap = () => {
   }
 
   interface ShopLocationInterface {
-    name: string;
+    id: number;
+    shop_name: string;
+    average_spicy: number;
+    category_id: number;
     location: { lat: number; lng: number };
   }
 
@@ -66,66 +65,80 @@ export const HereMap = () => {
     if (!map) return;
 
     const fetchShops = async () => {
-      await fetch(`/shops`)
-        .then(async (shopsJson) => await shopsJson.json())
-        .then((shops) => {
-          const shopsLocation: ShopLocationInterface[] = shops.map(
-            (shopData: ShopInterface): ShopLocationInterface => {
-              return {
-                name: shopData.shop,
-                location: { lat: shopData.latitude, lng: shopData.longitude },
-              };
-            },
-          );
+      const response = await fetch(`${API_URL}`);
+      const shops: ShopInterface[] = await response.json();
 
-          shopsLocation.forEach((shop) => {
-            const marker = new H.map.Marker(shop.location);
-            marker.setData(shop.name);
+      const shopsLocation: ShopLocationInterface[] = shops.map((shop) => ({
+        id: shop.id,
+        shop_name: shop.shop_name,
+        average_spicy: shop.average_spicy,
+        category_id: shop.category_id,
+        location: { lat: shop.latitude, lng: shop.longitude },
+      }));
 
-            marker.addEventListener("click", () => {
-              alert(`${shop.name}が選択されています。`);
+      shopsLocation.forEach((shopLocation) => {
+        const markerWrapper = document.createElement("div");
+        markerWrapper.style.position = "relative";
+        markerWrapper.style.display = "flex";
+        markerWrapper.style.alignItems = "center";
+        markerWrapper.style.justifyContent = "center";
+
+        const labelElement = document.createElement("div");
+        labelElement.style.position = "absolute";
+        labelElement.style.top = "-30px";
+        labelElement.style.left = "50%";
+        labelElement.style.transform = "translateX(-50%)";
+        labelElement.style.backgroundColor = "white";
+        labelElement.style.color = "black";
+        labelElement.style.padding = "2px 5px";
+        labelElement.style.borderRadius = "3px";
+        labelElement.style.fontSize = "10px";
+        labelElement.style.whiteSpace = "nowrap";
+        labelElement.style.boxShadow = "0px 2px 4px rgba(0, 0, 0, 0.2)";
+        labelElement.innerHTML = shopLocation.shop_name;
+
+        const markerElement = document.createElement("div");
+        markerElement.style.position = "absolute";
+        markerElement.style.width = "20px";
+        markerElement.style.height = "20px";
+        markerElement.style.backgroundColor = "#ff0000";
+        markerElement.style.border = "2px solid white";
+        markerElement.style.borderRadius = "50%";
+        markerElement.style.boxShadow = "0px 4px 6px rgba(0, 0, 0, 0.2)";
+        markerElement.style.cursor = "pointer";
+
+        markerWrapper.appendChild(labelElement);
+        markerWrapper.appendChild(markerElement);
+
+        const icon = new H.map.DomIcon(markerWrapper, {
+          onAttach: (clonedElement) => {
+            clonedElement.addEventListener("click", () => {
+              console.log("clicked");
+              setSelectShop(
+                shops.find(
+                  (shop) => Number(shop.id) === Number(shopLocation.id),
+                ),
+              );
             });
-
-            map.addObject(marker);
-
-            // 余白を追加する比率（10% 余白）
-            const paddingRatio = 0.1;
-
-            const latitudes = shopsLocation.map((r) => r.location.lat);
-            const longitudes = shopsLocation.map((r) => r.location.lng);
-
-            // 緯度と経度の範囲
-            const maxLat = Math.max(...latitudes);
-            const minLat = Math.min(...latitudes);
-            const maxLng = Math.max(...longitudes);
-            const minLng = Math.min(...longitudes);
-
-            // 余白の計算
-            const latPadding = (maxLat - minLat) * paddingRatio;
-            const lngPadding = (maxLng - minLng) * paddingRatio;
-
-            const boundingBox = new H.geo.Rect(
-              maxLat + latPadding, // 北端
-              minLng - lngPadding, // 西端
-              minLat - latPadding, // 南端
-              maxLng + lngPadding, // 東端
-            );
-
-            // 余白を追加した範囲を地図のビューに設定
-            map.getViewModel().setLookAtData({ bounds: boundingBox });
-            map.getViewModel().setLookAtData({ bounds: boundingBox });
-          });
+          },
         });
+
+        const marker = new H.map.DomMarker(shopLocation.location, {
+          icon,
+          data: shopLocation.id,
+        });
+
+        map.addObject(marker);
+      });
     };
 
     fetchShops();
   }, [map]);
 
   return (
-    <div
-      ref={mapRef}
-      style={{ width: "100%", height: "500px" }} // 地図の表示サイズ
-      id="mapContainer"
-    />
+    <>
+      <div ref={mapRef} style={{ width: "100%", height: "500px" }} />
+      <div>{JSON.stringify(selectShop)}</div>
+    </>
   );
 };
