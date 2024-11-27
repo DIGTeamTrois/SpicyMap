@@ -15,6 +15,6 @@ exports.seed = async function (knex) {
       login_name: "muusan",
       password: "1234567890",
     },
-    { id: 5, user_name: "taro", login_name: "taro", password: "1234567890" },
+    { id: 5, user_name: "a", login_name: "a", password: "$2b$10$vS1UKytZSEiO5ef.WWLXUO4u0y33ThNRtGhxXBNKUGdZMNuySm8KS" },
   ]);
 };
