@@ -33,14 +33,8 @@ module.exports = {
     async save(req, res) {
         try {
             const shopData = req.body;
-            const saveData = shopModel.save(shopData)
-            console.log("⭐️⭐️⭐️⭐️shopData", shopData  )
-            console.log("⭐️⭐️⭐️⭐️saveData",saveData   )
-            if (shopData.shop === saveData.shop) {
-                res.status(200).json(saveData)
-            } else {
-                res.status(400).json("Could not save shop's data.")
-            }
+            const [saveData] = await shopModel.save(shopData)
+            res.status(200).json(saveData)
         } catch (error) {
             console.log("Internal Server Error(shop data)", error)
             res.status(500).json({error: "Internal Server Error"});
