@@ -8,7 +8,7 @@
     "test-category": "clear & mocha test/testCategory.js",
     "test-comment": "clear & mocha test/testComment.js",
     "test-user": "clear & mocha test/testUser.js",
-    "build": "npm install && npm run migrate-latest && npm run seed-data",
+    "build": "npm install && npm run migrate-down && npm run migrate-latest && npm run seed-data",
     "dev": "nodemon ./src/index.js",
     "start": "node ./src/index.js",
     "migrate-latest": "knex migrate:latest",

@@ -5,30 +5,33 @@ const menuController = require("./menu_info/menuController");
 const commentController = require("./comment_info/commentController");
 const categoryController= require("./category_info/categoryController");
 const authRouter = require("./routes/auth");
-const createError = require("http-errors");
-const passport = require("passport");
+// const createError = require("http-errors");
 const session = require('express-session');
 const path = require('path');
 const flash = require('connect-flash');
 
 function setupServer() {
   const app = express();
-  // app.use(cors());
+  app.use(cors());
 
-  app.use(passport.initialize());
   app.use(session({
     secret: "secret",
     resave: false,
     saveUninitialized: true ,
   }));
   app.use(flash());
-  app.use(passport.authenticate('session')); // officialのtutorialsであった
+  // app.use(passport.authenticate('session')); // officialのtutorialsであった
   app.use(express.json());
 
   // Reactのビルドディレクトリのパスを解決
   const frontendPath = path.resolve(__dirname, '../../frontend/dist');
   app.use("/", express.static("../frontend/dist/"));
   // app.use("/", express.static(frontendPath)); // なぜ結果が同じになるのかわからない
+
+  // authorization
+  require("./passport_config/passport")(app);
+
+
   app.use("/", authRouter);
 
   app.get('/shops', shopController.all);
