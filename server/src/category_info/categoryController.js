@@ -32,12 +32,8 @@ module.exports= {
     async save(req, res) {
         try {
             const categoryData = req.body;
-            const saveData = categoryModel.save(categoryData)
-            if (categoryData.category === saveData.category) {
-                res.status(200).json(saveData)
-            } else {
-                res.status(400).json("Could not save category's data.")
-            }
+            const [saveData] = await categoryModel.save(categoryData)
+            res.status(200).json(saveData)
         } catch (error) {
             console.log("Internal Server Error(category data)", error)
             res.status(500).json({error: "Internal Server Error"});
