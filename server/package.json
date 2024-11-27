@@ -8,7 +8,7 @@
     "test-category": "clear & mocha test/testCategory.js",
     "test-comment": "clear & mocha test/testComment.js",
     "test-user": "clear & mocha test/testUser.js",
-    "build": "npm install && npm run migrate-latest && npm run seed-data",
+    "build": "npm install && npm run migrate-down && npm run migrate-latest && npm run seed-data",
     "dev": "nodemon ./src/index.js",
     "start": "node ./src/index.js",
     "migrate-latest": "knex migrate:latest",
@@ -34,6 +34,7 @@
     "pg": "^8.13.1"
   },
   "devDependencies": {
+    "@types/heremaps": "^3.1.14",
     "chai": "^4.5.0",
     "chai-http": "^4.4.0",
     "mocha": "^10.8.2",

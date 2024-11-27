@@ -16,7 +16,7 @@ interface destinationInterface {
 
 interface shopInterface {
   id: number;
-  shop: string;
+  shop_name: string;
   average_spicy: number;
   category_id: number;
   latitude: number;
@@ -49,7 +49,7 @@ export const originAtom = atom<originInterface>();
 export const destinationAtom = atom<destinationInterface>();
 
 export const shopsAtom = atom<shopInterface[]>([]);
-export const selectShopAtom = atom<shopInterface[]>([]);
+export const selectShopAtom = atom<shopInterface | undefined>();
 export const menusAtom = atom<menuInterface[]>([]);
 export const commentsAtom = atom<commentsInterface[]>([]);
 export const categoriesAtom = atom<categoriesInterface[]>([]);
