@@ -7,7 +7,7 @@ import {
 } from "@yamada-ui/react";
 
 import { useForm } from "react-hook-form";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 // const actionMethod = async (data : any) => {
 //     console.log("data", data);
@@ -48,12 +48,14 @@ export default function LoginView() {
         } else {
             const response2 = await response.json();
             console.log('server response json: ', response2);
-            navigate('/login');
+            navigate('/login', {state : response2 });
         }
     };
-
+    const location = useLocation();
+    const state = location.state as { message : string };
     return (
         <div>
+            {state ? <p>{state.message}</p> : ''}
             <Container centerContent w="400px">
                 <VStack>
                     <form onSubmit={handleSubmit(actionMethod)}>
