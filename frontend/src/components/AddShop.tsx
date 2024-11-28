@@ -1,12 +1,14 @@
 import {Box, Button, FormControl, Heading, Input, Select, SelectItem, Tag} from "@yamada-ui/react";
 import {useState} from "react";
-import { useAtomValue } from "jotai";
-import { newLocationAtom} from "./atom.tsx";
+import { useAtomValue, useSetAtom } from "jotai";
+import { newLocationAtom, isSubmitShopAtom} from "./atom.tsx";
 
 export function AddShop () {
   const [shopName, setShopName] = useState("")
   const [shopCategory, setShopCategory] = useState("")
   const newLocation = useAtomValue(newLocationAtom)
+  const setIsSubmitShop = useSetAtom(isSubmitShopAtom)
+
 
   const items: SelectItem[] = [
     { label: "韓国料理", value: "1" },
@@ -80,6 +82,7 @@ export function AddShop () {
         <Button
           onClick={ async() => {
             await dataUpdate();
+            setIsSubmitShop(true)
           }}
         >
           登録

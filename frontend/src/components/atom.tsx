@@ -50,6 +50,7 @@ interface newLocationInterface {
   longitude: number;
 }
 
+export const isSubmitShopAtom = atom<boolean>(false)
 export const originAtom = atom<originInterface>();
 export const destinationAtom = atom<destinationInterface>();
 
