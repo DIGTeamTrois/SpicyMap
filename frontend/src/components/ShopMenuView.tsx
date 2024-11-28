@@ -15,7 +15,8 @@ export function ShopMenuView() {
   }, [selectShop, setMenus]);
 
   if (!selectShop) {
-    return <Text size="sm">お店が選択されていません。</Text>;
+    // return <Text size="sm">お店が選択されていません。</Text>;
+    return <div></div>;
   }
 
   return (

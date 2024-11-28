@@ -7,7 +7,7 @@ const passport = require('passport');
 //     res.status(200).send('login');
 // });
 
-router.post('/login/password',
+router.post('/api/login',
     (req, res) => {
 
     // なぜかこれで動かない
@@ -58,10 +58,36 @@ router.post('/login/password',
 
             // sessionにログイン情報を格納
             req.logIn(user, () => {
-                return res.json({ message: `ログイン成功！ Hello, ${user.username}` });
+                return res.json({ message: `ログイン成功！ Hello, ${user.user_name}` });
             });
         })(req, res);
     }
 );
+
+// サインアップ
+// router.post("/sign-up", userController.save);
+
+// router.post("/api/signup", (req, res, next) => {
+//     //todo
+// });
+
+
+// ログアウトエンドポイント
+router.get("/logout", (req, res, next) => {
+    req.logout((err) => {
+        // res.json({ message: "ログアウト成功" });
+        if (err) { return next(err); }
+        console.log("logout");
+        res.redirect('/');
+    });
+});
+
+router.get('/api/user', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({ user: req.user }); // ログイン中のユーザー情報を返す
+    } else {
+        res.status(401).json({ message: 'Unauthorized' }); // 未認証の場合
+    }
+});
 
 module.exports = router;
