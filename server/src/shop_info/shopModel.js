@@ -34,7 +34,7 @@ module.exports = {
         return changedFoundData
     },
     async save(data){
-        await db.table(SHOP_TABlE).insert(data)
-        return this.find(data.id)
+        const [{id}] = await db.table(SHOP_TABlE).insert(data).returning("id")
+        return this.find(id)
     }
 }
