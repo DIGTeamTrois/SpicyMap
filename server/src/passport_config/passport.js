@@ -35,19 +35,6 @@ module.exports = function (app) {
         async function (username, password, done) {
             console.log("localstrategy username : ", username);
             console.log("localstrategy password : ", password);
-            // const result =  knex(TABLE_NAME).where(
-            //     {
-            //         name: username,
-            //     }).select("*");
-            // console.log(result);
-            //
-            // return done(null, false, {message: "Invalid User"});
-            //
-            // const [user] = await findUser(username);
-            //
-            // return done(null, {...user});
-
-
 
             knex(TABLE_NAME)
                 .where(

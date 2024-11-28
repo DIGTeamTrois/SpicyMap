@@ -32,7 +32,7 @@ export default function LoginView() {
 
     const actionMethod = async () => {
 
-        const response = await fetch('/login/password', {
+        const response = await fetch('/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
