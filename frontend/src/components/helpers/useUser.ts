@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 function useUser() {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<string|null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -10,8 +10,9 @@ function useUser() {
                 const response = await fetch('/api/user', { credentials: 'include' });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
-                    setUser(data.user);
+                    console.log("data;",data);
+                    console.log("data.user: ",data.user);
+                    setUser(data.user.user_name); // user_nameだけフロントで扱う
                 } else {
                     setUser(null); // 未認証の場合
                 }
@@ -25,7 +26,7 @@ function useUser() {
         fetchUser();
     }, []);
 
-    return { user, loading };
+    return { user, setUser, loading };
 }
 
 export default useUser;

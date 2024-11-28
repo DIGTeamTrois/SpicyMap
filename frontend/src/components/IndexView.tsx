@@ -12,15 +12,16 @@ export default function IndexView() {
         navigate('/login');
     }
     const handleLogout = async () => {
+        setUser(null);
         await fetch('/logout');
     }
-    const {user} = useUser();
+    const {user, setUser} = useUser();
   return (
     <>
       <h1>HERE Map</h1>
         {user ?
             (<>
-                <p>{user}</p>
+                <p>ユーザー名：{user}</p>
                 <Button onClick={handleLogout}>Logout</Button>
             </>)
             : (<Button onClick={handleLogin}>Login</Button>)
