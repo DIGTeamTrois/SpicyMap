@@ -11,7 +11,6 @@ function useUser() {
                 if (response.ok) {
                     const data = await response.json();
                     console.log("data;",data);
-                    console.log("data.user: ",data.user);
                     setUser(data.user.user_name); // user_nameだけフロントで扱う
                 } else {
                     setUser(null); // 未認証の場合
