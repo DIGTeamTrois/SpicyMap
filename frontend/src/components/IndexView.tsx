@@ -2,6 +2,7 @@ import { Box, HStack } from "@yamada-ui/react";
 import { HereMap } from "../mapFeatures/HereMap.tsx";
 import { ShopMenuView } from "./ShopMenuView.tsx";
 import { AddMenu } from "./AddMenu.tsx";
+import {AddShop} from "./AddShop.tsx";
 
 export default function IndexView() {
   return (
@@ -14,6 +15,7 @@ export default function IndexView() {
           <AddMenu />
         </Box>
       </HStack>
+      <AddShop />
     </>
   );
 }

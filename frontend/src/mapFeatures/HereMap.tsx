@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { useSetAtom } from "jotai";
-import { selectShopAtom } from "../components/atom.tsx";
+import { useSetAtom, useAtom} from "jotai";
+import { selectShopAtom, newLocationAtom, isSubmitShopAtom} from "../components/atom.tsx";
 import { initializeMap } from "./mapInitializer";
 import { loadShops } from "./shopLoader";
+
 
 export const HereMap = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<H.Map | null>(null);
   const [marker, setMarker] = useState<H.map.Marker | null>(null);
   const setSelectShop = useSetAtom(selectShopAtom);
+  const setLocation = useSetAtom(newLocationAtom)
+  const [isSubmitShop, setIsSubmitShop]= useAtom(isSubmitShopAtom)
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -16,10 +19,11 @@ export const HereMap = () => {
     const mapInstance = initializeMap(mapRef.current);
     setMap(mapInstance);
 
+    setIsSubmitShop(false);
     return () => {
       mapInstance.dispose();
     };
-  }, []);
+  }, [isSubmitShop]);
 
   useEffect(() => {
     if (!map) return;
@@ -30,7 +34,10 @@ export const HereMap = () => {
         evt.currentPointer.viewportX,
         evt.currentPointer.viewportY,
       );
-
+      setLocation({
+        latitude:coords.lat,
+        longitude:coords.lng
+      })
       console.log(`Clicked coordinates: ${coords.lat}, ${coords.lng}`);
 
       if (marker) {

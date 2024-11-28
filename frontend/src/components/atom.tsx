@@ -45,6 +45,12 @@ interface categoriesInterface {
   category: string;
 }
 
+interface newLocationInterface {
+  latitude: number;
+  longitude: number;
+}
+
+export const isSubmitShopAtom = atom<boolean>(false)
 export const originAtom = atom<originInterface>();
 export const destinationAtom = atom<destinationInterface>();
 
@@ -53,3 +59,4 @@ export const selectShopAtom = atom<shopInterface | undefined>();
 export const menusAtom = atom<menuInterface[]>([]);
 export const commentsAtom = atom<commentsInterface[]>([]);
 export const categoriesAtom = atom<categoriesInterface[]>([]);
+export const newLocationAtom = atom<newLocationInterface | undefined>()
